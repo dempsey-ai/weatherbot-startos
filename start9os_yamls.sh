@@ -28,6 +28,10 @@ fi
     initHostUser="$initHostUser"
   fi
 
+if [ "$initHostUser" == "" ]; then
+  initHostUser="not set"
+fi
+
 # User Config
 if [ ! -f $START9_HOME/config.yaml ]; then
 printf "Creating missing config.yaml\n"
@@ -109,6 +113,12 @@ else
     initHostUser="$initHostUser"
   fi
 
+
+if [ "$initHostUser" == "" ]; then
+  initHostUser="not set"
+fi
+
+
   cat <<EOP > $APP_HOME/weatherBot.env
 DEBUG_MODE=$DEBUG_MODE
 APP_DATA=$APP_DATA
@@ -134,12 +144,6 @@ if [[ "$WXBOT" =~ ^\".*\"$ ]]; then
     echo "WXBOT value already has quotes."
 else
     WXBOT="$WXBOT"
-fi
-
-if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
-    echo "initHostUser value already has quotes."
-else
-    initHostUser="$initHostUser"
 fi
 
 # Properties Page

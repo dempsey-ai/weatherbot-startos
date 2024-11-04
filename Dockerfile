@@ -15,6 +15,14 @@ ENV APP_DATA=$APP_HOME/wx-bot-appdata \
 
 USER root
 
+RUN apt-get update && \
+    apt-get install -y wget && \
+    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && \
+    chmod +x /usr/bin/yq && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+
 COPY ./check-health.sh /usr/local/bin/check-health.sh
 RUN chmod a+x /usr/local/bin/check-health.sh
 
