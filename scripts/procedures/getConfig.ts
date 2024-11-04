@@ -21,36 +21,29 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "default": 5222,
             "range": "[1024,65535]"
           },
-          "temperature-thresholds": {
-            "name": "Temperature Thresholds",
-            "description": "Configure temperature color coding thresholds",
-            "type": "object",
-            "spec": {
-              "summer-temp-hot": {
-                "name": "Summer Hot Threshold",
-                "description": "Temperature threshold for hot weather during summer months",
-                "type": "number",
-                "default": 85,
-                "units": "degrees",
-                "range": "[0,110]"
-              },
-              "temp-hot": {
-                "name": "General Hot Threshold",
-                "description": "Temperature threshold for hot weather during non-summer months",
-                "type": "number",
-                "default": 75,
-                "units": "degrees",
-                "range": "[0,110]"
-              },
-              "temp-cold": {
-                "name": "Cold Threshold",
-                "description": "Temperature threshold for cold weather year-round",
-                "type": "number",
-                "default": 50,
-                "units": "degrees",
-                "range": "[0,110]"
-              }
-            }
+          "summer-temp-hot": {
+            "name": "Summer Hot Threshold",
+            "description": "Temperature threshold for hot weather during summer months",
+            "type": "number",
+            "default": 85,
+            "units": "degrees",
+            "range": "[0,110]"
+          },
+          "temp-hot": {
+            "name": "General Hot Threshold",
+            "description": "Temperature threshold for hot weather during non-summer months",
+            "type": "number",
+            "default": 75,
+            "units": "degrees",
+            "range": "[0,110]"
+          },
+          "temp-cold": {
+            "name": "Cold Threshold",
+            "description": "Temperature threshold for cold weather year-round",
+            "type": "number",
+            "default": 50,
+            "units": "degrees",
+            "range": "[0,110]"
           },
           "share-bot-address": {
             "name": "Share Bot Address",
@@ -65,8 +58,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "nullable": true,
             "default": ""
           }
-        } as const,
-      );
+        });
       
-  export type SetConfig = typeof setConfigMatcher._TYPE;
+
   
