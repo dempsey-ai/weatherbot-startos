@@ -22,6 +22,12 @@ if [ ! -d $START9_HOME ]; then
   mkdir -p $START9_HOME
 fi
 
+  if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
+    echo "initHostUser value already has quotes."
+  else
+    initHostUser="$initHostUser"
+  fi
+
 # User Config
 if [ ! -f $START9_HOME/config.yaml ]; then
 printf "Creating missing config.yaml\n"
@@ -88,14 +94,20 @@ EOP
 else
   printf "config.yaml exists, updating weatherBot.env\n"
   #source $START9_HOME/config.yaml
-  DEBUG_MODE=$(grep 'DEBUG_MODE' $START9_HOME/config.yaml | cut -d ' ' -f 2)
-  APP_DATA="\"$(grep 'APP_DATA' $START9_HOME/config.yaml | cut -d ' ' -f 2)\""
-  SIMPLEX_CHAT_PORT=$(grep 'SIMPLEX_CHAT_PORT' $START9_HOME/config.yaml | cut -d ' ' -f 2 || echo "5225")
-  summerTempHot=$(grep 'summerTempHot' $START9_HOME/config.yaml | cut -d ' ' -f 2)
-  tempHot=$(grep 'tempHot' $START9_HOME/config.yaml | cut -d ' ' -f 2)
-  tempCold=$(grep 'tempCold' $START9_HOME/config.yaml | cut -d ' ' -f 2)
-  shareBotAddress=$(grep 'shareBotAddress' $START9_HOME/config.yaml | cut -d ' ' -f 2)
-  initHostUser="\"$(grep 'initHostUser' $START9_HOME/config.yaml | cut -d ' ' -f 2 || echo "")\""
+  DEBUG_MODE=$(yq e '.data.DEBUG_MODE.value' $START9_HOME/config.yaml)
+  APP_DATA=$(yq e '.data.APP_DATA.value' $START9_HOME/config.yaml)
+  SIMPLEX_CHAT_PORT=$(yq e '.data.SIMPLEX_CHAT_PORT.value // 5225' $START9_HOME/config.yaml)
+  summerTempHot=$(yq e '.data.summerTempHot.value' $START9_HOME/config.yaml)
+  tempHot=$(yq e '.data.tempHot.value' $START9_HOME/config.yaml)
+  tempCold=$(yq e '.data.tempCold.value' $START9_HOME/config.yaml)
+  shareBotAddress=$(yq e '.data.shareBotAddress.value' $START9_HOME/config.yaml)
+  initHostUser=$(yq e '.data.initHostUser.value' $START9_HOME/config.yaml)
+
+  if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
+    echo "initHostUser value already has quotes."
+  else
+    initHostUser="$initHostUser"
+  fi
 
   cat <<EOP > $APP_HOME/weatherBot.env
 DEBUG_MODE=$DEBUG_MODE
@@ -112,29 +124,42 @@ fi
 
 if [ ! -f $APP_DATA/wxbot.env ]; then 
   printf "wxBot user profile not yet created\n"
-  WXBOT=""
+  WXBOT=unknown
 else
   printf "wxBot user profile exists, updating stats.yaml\n"
   source $APP_DATA/wxbot.env
 fi
+
+if [[ "$WXBOT" =~ ^\".*\"$ ]]; then
+    echo "WXBOT value already has quotes."
+else
+    WXBOT="$WXBOT"
+fi
+
+if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
+    echo "initHostUser value already has quotes."
+else
+    initHostUser="$initHostUser"
+fi
+
 # Properties Page
-cat <<EOP > $START9_HOME/stats.yaml
+cat > $START9_HOME/stats.yaml <<EOF
 version: 2
 data:
   wxBot Address:
     type: string
-    value: "$WXBOT"
+    value: $WXBOT
     description: The weatherBot SimpleX profile address to share with others
     copyable: true
     masked: false
     qr: true
   Initial Host User:
     type: string
-    value: "$initHostUser"
+    value: $initHostUser
     description: The Simplex user address for initial host/admin user (initial authorized user for weatherBot)
     copyable: true
     masked: false
     qr: true
-EOP
+EOF
 
 exit 0

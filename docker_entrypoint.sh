@@ -27,13 +27,17 @@ start9os_yamls.sh
     export $(cat weatherBot.env | grep -v '^#' | xargs)
 
     printf "Listing all .flag files in current directory and subfolders:\n"
-    ls -R ./*.flag
+    if ls ./*.flag 1> /dev/null 2>&1; then
+        ls -R ./*.flag
+    else
+        printf "No .flag files found in the current directory.\n"
+    fi
 
     # Start the first application with piped input
     if [ ! -f ./initcli.flag ] && [ ! -f "$APP_DATA/initcli.flag" ]; then
         printf "initcli.flag NOT found in both locations, starting wxBot first time\n"
 
-        printf "wxBot\n" | $CLI_HOME/simplex-chat -l error -p ${SIMPLEX_CHAT_PORT:-5225} -d $APP_DATA/jed &
+        echo "wxBot" | $CLI_HOME/simplex-chat -l error -p ${SIMPLEX_CHAT_PORT:-5225} -d $APP_DATA/jed &
         FIRST_APP_PID=$!
         touch ./initcli.flag  # Create the flag file here
         touch $APP_DATA/initcli.flag
@@ -81,13 +85,8 @@ start9os_yamls.sh
         sleep 2
     fi
    
-	if is_docker; then
-	    printf "Exiting wxBot\n"
-	    # echo "Restarting applications..."
-	else
-	    printf "non-docker, exiting wxBot\n"
-        # comment out the following line if you don't want to pause the script before exiting/restarting
-	    read -p "Press [Enter] to continue..."
-	fi
+	printf "Exiting wxBot\n"
+	
+
 #done
 
