@@ -19,19 +19,24 @@ CURRENT_USER=$(whoami)
 
 cd $APP_HOME
 # calls start9os_yamls.sh to create/update yamls and create/update weatherBot.env
-$APP_HOME/start9os_yamls.sh
+start9os_yamls.sh
 
 
 #while true; do
     # Load environment variables from weatherBot.env
     export $(cat weatherBot.env | grep -v '^#' | xargs)
 
+    printf "Listing all .flag files in current directory and subfolders:\n"
+    ls -R *.flag 2>/dev/null || printf "No .flag files found in current directory and subfolders.\n"
+
     # Start the first application with piped input
-    if [ ! -f ./initcli.flag ]; then
-        printf "initcli.flag NOT found, starting wxBot first time\n"
+    if [ ! -f ./initcli.flag ] && [ ! -f "$APP_DATA/initcli.flag" ]; then
+        printf "initcli.flag NOT found in both locations, starting wxBot first time\n"
+
         printf "wxBot\n" | $CLI_HOME/simplex-chat -l error -p ${SIMPLEX_CHAT_PORT:-5225} -d $APP_DATA/jed &
         FIRST_APP_PID=$!
         touch ./initcli.flag  # Create the flag file here
+        touch $APP_DATA/initcli.flag
     else
         printf "Normal CLI start on port %s\n" "${SIMPLEX_CHAT_PORT:-5225}"
         $CLI_HOME/simplex-chat -l error -p ${SIMPLEX_CHAT_PORT:-5225} -d $APP_DATA/jed &

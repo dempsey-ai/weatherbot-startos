@@ -4,7 +4,7 @@ set -ea
 
 
 if [ ! -f $APP_HOME/weatherBot.env ]; then
-  echo "weatherBot.env not found, creating"
+  printf "weatherBot.env not found, creating\n"
   # copy from .env-template
   cp $APP_HOME/.env-template $APP_HOME/weatherBot.env
 fi
@@ -18,13 +18,13 @@ APP_DATA="${APP_DATA:-$APP_HOME/wx-bot-appdata}"
 START9_HOME="${START9_HOME:-/root/start9}"
 
 if [ ! -d $START9_HOME ]; then
-  echo "start9 home directory not found, creating"
+  printf "start9 home directory not found, creating\n"
   mkdir -p $START9_HOME
 fi
 
 # User Config
 if [ ! -f $START9_HOME/config.yaml ]; then
-echo "Creating missing config.yaml"
+printf "Creating missing config.yaml\n"
 cat <<EOP > $START9_HOME/config.yaml
 version: 2
 data:
@@ -87,7 +87,7 @@ data:
 EOP
 fi
 else
-  echo "config.yaml exists, updating weatherBot.env"
+  printf "config.yaml exists, updating weatherBot.env\n"
   #source $START9_HOME/config.yaml
   DEBUG_MODE=$(yq e '.data.DEBUG_MODE.value' /root/start9/config.yaml)
   APP_DATA="\"$(yq e '.data.APP_DATA.value' /root/start9/config.yaml)\""
@@ -112,10 +112,10 @@ fi
 
 
 if [ ! -f $APP_DATA/wxbot.env ]; then 
-  echo "wxBot user profile not yet created"
+  printf "wxBot user profile not yet created\n"
   WXBOT=""
 else
-  echo "wxBot user profile exists, updating stats.yaml"
+  printf "wxBot user profile exists, updating stats.yaml\n"
   source $APP_DATA/wxbot.env
 fi
 # Properties Page
