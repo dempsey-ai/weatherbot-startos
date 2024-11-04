@@ -26,12 +26,9 @@ start9os_yamls.sh
     # Load environment variables from weatherBot.env
     export $(cat weatherBot.env | grep -v '^#' | xargs)
 
-    printf "Listing all .flag files in current directory and subfolders:\n"
-    if ls ./*.flag 1> /dev/null 2>&1; then
-        ls -R ./*.flag
-    else
-        printf "No .flag files found in the current directory.\n"
-    fi
+    printf "Listing files in current directory and $APP_DATA\n"
+    ls -l
+    ls -l $APP_DATA
 
     # Start the first application with piped input
     if [ ! -f ./initcli.flag ] && [ ! -f "$APP_DATA/initcli.flag" ]; then
@@ -46,6 +43,14 @@ start9os_yamls.sh
         $CLI_HOME/simplex-chat -l error -p ${SIMPLEX_CHAT_PORT:-5225} -d $APP_DATA/jed &
         FIRST_APP_PID=$!
     fi
+
+
+    # Launch the WXBOT monitor script in background
+    /usr/local/bin/watcher_wxbotenv.sh &
+
+    # Store the monitor script's PID
+    MONITOR_PID=$!
+
 
     printf "Starting wx-bot-chat.js\n"
     sleep 3

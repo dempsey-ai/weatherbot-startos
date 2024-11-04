@@ -22,15 +22,12 @@ if [ ! -d $START9_HOME ]; then
   mkdir -p $START9_HOME
 fi
 
-  if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
-    echo "initHostUser value already has quotes."
-  else
-    initHostUser="$initHostUser"
-  fi
-
-if [ "$initHostUser" == "" ]; then
-  initHostUser="not set"
+if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
+    # Remove beginning and ending quotes
+    initHostUser="${initHostUser#\"}"  # Remove first quote
+    initHostUser="${initHostUser%\"}"  # Remove last quote
 fi
+
 
 # User Config
 if [ ! -f $START9_HOME/config.yaml ]; then
@@ -114,11 +111,6 @@ else
   fi
 
 
-if [ "$initHostUser" == "" ]; then
-  initHostUser="not set"
-fi
-
-
   cat <<EOP > $APP_HOME/weatherBot.env
 DEBUG_MODE=$DEBUG_MODE
 APP_DATA=$APP_DATA
@@ -141,10 +133,11 @@ else
 fi
 
 if [[ "$WXBOT" =~ ^\".*\"$ ]]; then
-    echo "WXBOT value already has quotes."
-else
-    WXBOT="$WXBOT"
-fi
+    printf "WXBOT value already has quotes, removing quotes for propertiesyaml. \n"
+    WXBOT="${WXBOT#\"}"  # Remove first quote
+  WXBOT="${WXBOT%\"}"  # Remove last quote
+fi 
+
 
 # Properties Page
 cat > $START9_HOME/stats.yaml <<EOF

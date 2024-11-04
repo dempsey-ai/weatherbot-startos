@@ -32,6 +32,8 @@ RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
 COPY ./start9os_yamls.sh /usr/local/bin/start9os_yamls.sh
 RUN chmod a+x /usr/local/bin/start9os_yamls.sh
 
+COPY ./watcher_wxbotenv.sh /usr/local/bin/watcher_wxbotenv.sh
+RUN chmod a+x /usr/local/bin/watcher_wxbotenv.sh
 
 # Allow console output to be seen outside the container
 STOPSIGNAL SIGTERM
