@@ -85,18 +85,17 @@ data:
     masked: false
     qr: true
 EOP
-fi
 else
   printf "config.yaml exists, updating weatherBot.env\n"
   #source $START9_HOME/config.yaml
-  DEBUG_MODE=$(yq e '.data.DEBUG_MODE.value' /root/start9/config.yaml)
-  APP_DATA="\"$(yq e '.data.APP_DATA.value' /root/start9/config.yaml)\""
-  SIMPLEX_CHAT_PORT=$(yq e '.data.SIMPLEX_CHAT_PORT.value' /root/start9/config.yaml || echo "5225")
-  summerTempHot=$(yq e '.data.summerTempHot.value' /root/start9/config.yaml)
-  tempHot=$(yq e '.data.tempHot.value' /root/start9/config.yaml)
-  tempCold=$(yq e '.data.tempCold.value' /root/start9/config.yaml)
-  shareBotAddress=$(yq e '.data.shareBotAddress.value' /root/start9/config.yaml)
-  initHostUser="\"$(yq e '.data.initHostUser.value' /root/start9/config.yaml || echo "")\""
+  DEBUG_MODE=$(grep 'DEBUG_MODE' $START9_HOME/config.yaml | cut -d ' ' -f 2)
+  APP_DATA="\"$(grep 'APP_DATA' $START9_HOME/config.yaml | cut -d ' ' -f 2)\""
+  SIMPLEX_CHAT_PORT=$(grep 'SIMPLEX_CHAT_PORT' $START9_HOME/config.yaml | cut -d ' ' -f 2 || echo "5225")
+  summerTempHot=$(grep 'summerTempHot' $START9_HOME/config.yaml | cut -d ' ' -f 2)
+  tempHot=$(grep 'tempHot' $START9_HOME/config.yaml | cut -d ' ' -f 2)
+  tempCold=$(grep 'tempCold' $START9_HOME/config.yaml | cut -d ' ' -f 2)
+  shareBotAddress=$(grep 'shareBotAddress' $START9_HOME/config.yaml | cut -d ' ' -f 2)
+  initHostUser="\"$(grep 'initHostUser' $START9_HOME/config.yaml | cut -d ' ' -f 2 || echo "")\""
 
   cat <<EOP > $APP_HOME/weatherBot.env
 DEBUG_MODE=$DEBUG_MODE

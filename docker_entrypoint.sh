@@ -27,7 +27,7 @@ start9os_yamls.sh
     export $(cat weatherBot.env | grep -v '^#' | xargs)
 
     printf "Listing all .flag files in current directory and subfolders:\n"
-    ls -R *.flag 2>/dev/null || printf "No .flag files found in current directory and subfolders.\n"
+    ls -R ./*.flag
 
     # Start the first application with piped input
     if [ ! -f ./initcli.flag ] && [ ! -f "$APP_DATA/initcli.flag" ]; then
