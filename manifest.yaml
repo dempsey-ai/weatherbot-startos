@@ -2,9 +2,10 @@ id: weatherbot
 title: "WeatherBot"
 version: 1.1.0
 release-notes: |
-  - Update to the latest upstream code
-  - Update bundling process to use Deno emit module
-license: MIT
+  - Based on SimpleX Chat client v6.1.1
+  - Built using StartOS SDK 0.3.5.1
+  - Uses Node.js image node:22.11.0-slim
+license: AGPL v3
 wrapper-repo: "https://github.com/dempsey-ai/weatherbot-startos.git"
 upstream-repo: "https://github.com/dempsey-ai/weatherbot.git"
 support-site: "https://github.com/simplex-chat/simplexmq/issues"
