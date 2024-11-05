@@ -17,17 +17,19 @@ CLI_HOME="${CLI_HOME:-$HOME/.local/bin}"
 APP_DATA="${APP_DATA:-$APP_HOME/wx-bot-appdata}"
 START9_HOME="${START9_HOME:-/root/start9}"
 
+APP_DATA=$APP_HOME/wx-bot-appdata
+
 if [ ! -d $START9_HOME ]; then
   printf "start9 home directory not found, creating\n"
   mkdir -p $START9_HOME
 fi
 
-if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
-    # Remove beginning and ending quotes
-    initHostUser="${initHostUser#\"}"  # Remove first quote
-    initHostUser="${initHostUser%\"}"  # Remove last quote
+if [ "$initHostUser" == "" ]; then
+  printf "initHostUser not set, use WXBOT to connect Host User to weatherBot\n"
+  initHostUser=""
+else
+  printf "initHostUser set prior to checking config.yaml, using $initHostUser to connect Host User to weatherBot\n"
 fi
-
 
 # User Config
 if [ ! -f $START9_HOME/config.yaml ]; then
@@ -35,56 +37,49 @@ printf "Creating missing config.yaml\n"
 cat <<EOP > $START9_HOME/config.yaml
 version: 2
 data:
-  DEBUG_MODE:
+  debug-mode:
     type: boolean
     value: $DEBUG_MODE
     description: Enable additional console logging
     copyable: true
     masked: false
     qr: false
-  APP_DATA:
-    type: string
-    value: $APP_DATA
-    description: Directory for environment specific application data
-    copyable: true
-    masked: false
-    qr: false
-  SIMPLEX_CHAT_PORT:
+  simplex-chat-port:
     type: number
     value: $SIMPLEX_CHAT_PORT
     description: Port number for Simplex Chat connection
     copyable: true
     masked: false
     qr: false
-  summerTempHot:
+  summer-temp-hot:
     type: number
     value: $summerTempHot
     description: Temperature threshold for hot weather during summer months
     copyable: true
     masked: false
     qr: false
-  tempHot:
+  temp-hot:
     type: number
     value: $tempHot
     description: Temperature threshold for hot weather during non-summer months
     copyable: true
     masked: false
     qr: false
-  tempCold:
+  temp-cold:
     type: number
     value: $tempCold
     description: Temperature threshold for cold weather year-round
     copyable: true
     masked: false
     qr: false
-  shareBotAddress:
+  share-bot-address:
     type: boolean
     value: $shareBotAddress
     description: Allow users to share the weatherBot profile address with others
     copyable: true
     masked: false
     qr: false
-  initHostUser:
+  init-host-user:
     type: string
     value: $initHostUser
     description: Simplex user address for initial host/admin user
@@ -94,15 +89,26 @@ data:
 EOP
 else
   printf "config.yaml exists, updating weatherBot.env\n"
+  cat $START9_HOME/config.yaml
+
+
   #source $START9_HOME/config.yaml
-  DEBUG_MODE=$(yq e '.data.DEBUG_MODE.value' $START9_HOME/config.yaml)
-  APP_DATA=$(yq e '.data.APP_DATA.value' $START9_HOME/config.yaml)
-  SIMPLEX_CHAT_PORT=$(yq e '.data.SIMPLEX_CHAT_PORT.value // 5225' $START9_HOME/config.yaml)
-  summerTempHot=$(yq e '.data.summerTempHot.value' $START9_HOME/config.yaml)
-  tempHot=$(yq e '.data.tempHot.value' $START9_HOME/config.yaml)
-  tempCold=$(yq e '.data.tempCold.value' $START9_HOME/config.yaml)
-  shareBotAddress=$(yq e '.data.shareBotAddress.value' $START9_HOME/config.yaml)
-  initHostUser=$(yq e '.data.initHostUser.value' $START9_HOME/config.yaml)
+  DEBUG_MODE=$(yq e '.debug-mode' $START9_HOME/config.yaml)
+  SIMPLEX_CHAT_PORT=$(yq e '.simplex-chat-port // 5225' $START9_HOME/config.yaml)
+  summerTempHot=$(yq e '.summer-temp-hot' $START9_HOME/config.yaml)
+  tempHot=$(yq e '.temp-hot' $START9_HOME/config.yaml)
+  tempCold=$(yq e '.temp-cold' $START9_HOME/config.yaml)
+  shareBotAddress=$(yq e '.share-bot-address' $START9_HOME/config.yaml)
+  initHostUser=$(yq e '.init-host-user' $START9_HOME/config.yaml)
+
+
+  if [ "$initHostUser" == "" ]; then
+  printf "initHostUser not set after config.yaml, use WXBOT to connect Host User to weatherBot\n"
+  initHostUser=""
+else
+  printf "initHostUser found in config.yaml, using [simplex address] to connect Host User to weatherBot\n"
+fi
+  
 
   if [[ "$initHostUser" =~ ^\".*\"$ ]]; then
     echo "initHostUser value already has quotes."
@@ -128,17 +134,17 @@ if [ ! -f $APP_DATA/wxbot.env ]; then
   printf "wxBot user profile not yet created\n"
   WXBOT=unknown
 else
-  printf "wxBot user profile exists, updating stats.yaml\n"
+  printf "wxBot user profile exists, updating $START9_HOME/stats.yaml\n"
   source $APP_DATA/wxbot.env
 fi
 
 if [[ "$WXBOT" =~ ^\".*\"$ ]]; then
-    printf "WXBOT value already has quotes, removing quotes for propertiesyaml. \n"
+    printf "WXBOT value already has quotes, removing quotes for properties yaml. \n"
     WXBOT="${WXBOT#\"}"  # Remove first quote
   WXBOT="${WXBOT%\"}"  # Remove last quote
 fi 
 
-
+printf "creating $START9_HOME/stats.yaml\n"
 # Properties Page
 cat > $START9_HOME/stats.yaml <<EOF
 version: 2
@@ -158,5 +164,8 @@ data:
     masked: false
     qr: true
 EOF
+
+printf "stats.yaml created\n"
+cat $START9_HOME/stats.yaml
 
 exit 0

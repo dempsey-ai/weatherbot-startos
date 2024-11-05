@@ -30,7 +30,7 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
         
           # Create stats.yaml
           if [[ "$WXBOT" =~ ^\".*\"$ ]]; then
-              printf "WXBOT value already has quotes, removing quotes for propertiesyaml. \n"
+              printf "WXBOT value already has quotes, removing quotes for properties yaml. \n"
               WXBOT="${WXBOT#\"}"  # Remove first quote
               WXBOT="${WXBOT%\"}"  # Remove last quote
           fi    
