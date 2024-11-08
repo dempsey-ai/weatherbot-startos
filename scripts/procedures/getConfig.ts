@@ -50,6 +50,13 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "nullable": false,
             "default": true
           },
+          "bot-display-name": {
+            "name": "SimpleX weatherBot Profile Name",
+            "description": "Display name for the weatherBot profile that connected users will see",
+            "type": "string",
+            "nullable": false,
+            "default": "Weather.gov"
+          },
           "init-host-user": {
             "name": "Initial Host User",
             "description": "Simplex user address for initial host/admin user",
