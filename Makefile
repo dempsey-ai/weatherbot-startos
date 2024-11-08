@@ -35,14 +35,14 @@ x86:
 scripts/embassy.js: $(TS_FILES)
 	deno run --allow-read --allow-write --allow-env --allow-net scripts/bundle.ts
 
-docker-images/x86_64.tar: Dockerfile docker_entrypoint.sh start9os_yamls.sh check-health.sh watcher_wxbotenv.sh
+docker-images/x86_64.tar: Dockerfile check-health.sh
 ifeq ($(ARCH),aarch64)
 else
 	mkdir -p docker-images
 	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --platform=linux/amd64 -o type=docker,dest=docker-images/x86_64.tar .
 endif
 
-docker-images/aarch64.tar: Dockerfile docker_entrypoint.sh start9os_yamls.sh check-health.sh watcher_wxbotenv.sh
+docker-images/aarch64.tar: Dockerfile check-health.sh
 ifeq ($(ARCH),x86_64)
 else
 	mkdir -p docker-images
