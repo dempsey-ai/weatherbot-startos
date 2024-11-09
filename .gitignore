@@ -1,4 +1,5 @@
-weatherbot.s9pk
+*.s9pk
+git-setup.md
 image.tar
 scripts/*.js
 .DS_Store

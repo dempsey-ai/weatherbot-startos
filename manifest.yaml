@@ -33,7 +33,7 @@ hardware-requirements:
     - x86_64
 health-checks:
   main:
-    name: Web Interface
+    name: Node.js process
     success-message: weatherBot is alive and accepting incoming connections
     type: docker
     image: main
@@ -64,20 +64,10 @@ interfaces:
     tor-config:
       port-mapping:
         5225: "5225"
-    ui: false
-    protocols:
-      - tcp
-      - ws
-  websocket:
-    name: Websocket Interface
-    description: SimpleX CLI interface
-    tor-config:
-      port-mapping:
-        80: "8080"
     lan-config:
-      443:
-        ssl: true
-        internal: 8080
+      5225:
+        ssl: false
+        internal: 5225
     ui: false
     protocols:
       - tcp
@@ -89,14 +79,14 @@ backup:
     type: docker
     image: compat
     system: true 
-    entrypoint: /assets/backup.sh 
+    entrypoint: /assets/backup.sh
     args:
       - duplicity
       - create
-      - /mnt/backup/data
+      - /mnt/backup
       - /root/start9
     mounts:
-      BACKUP: /mnt/backup/data
+      BACKUP: /mnt/backup
       compat: /assets
       main: /root/start9
       data: /home/appuser/weatherbot/wx-bot-appdata
@@ -108,10 +98,10 @@ backup:
     args:
       - duplicity
       - restore
-      - /mnt/backup/data
+      - /mnt/backup
       - /root/start9
     mounts:
-      BACKUP: /mnt/backup/data
+      BACKUP: /mnt/backup
       compat: /assets
       main: /root/start9
       data: /home/appuser/weatherbot/wx-bot-appdata

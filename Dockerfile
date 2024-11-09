@@ -6,7 +6,7 @@
 # The majority of the work at this point was figuring out the manifest and makefile components.
 
 ### Start9os stage
-FROM dempsey0ai/weatherbot:wgov-1.2 .
+FROM dempsey0ai/weatherbot:wgov-1.2
 
 USER root
 
