@@ -55,7 +55,14 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "description": "Display name for the weatherBot profile that connected users will see",
             "type": "string",
             "nullable": false,
-            "default": "Weather.gov"
+            "default": "WeatherBit.io"
+          },
+          "weather-provider-api-key": {
+            "name": "WeatherBit.io Provider API Key (https://www.weatherbit.io/account/create)",
+            "description": "Weather provider specific API key string.  Some providers require an API key, even if free tier is used.  WeatherBit.io provides a free account as well as trial access to higher tier which provides extended forecast periods. There is a data access limit on the free tier, but weatherBot helps by caching the forecast data for each unique location for 60 minutes.",
+            "type": "string",
+            "nullable": false,
+            "default": ""
           },
           "init-host-user": {
             "name": "Initial Host User",

@@ -6,7 +6,7 @@
 # The majority of the work at this point was figuring out the manifest and makefile components.
 
 ### Start9os stage
-FROM dempsey0ai/weatherbot:wgov-1.2
+FROM dempsey0ai/weatherbot:wgov-1.3
 
 USER root
 
@@ -30,6 +30,13 @@ RUN yq -i ".data.\"user-home\".value = \"$HOME\"" $APP_HOME/wx-bot-weatherbot.ya
     yq -i ".data.\"app-home\".value = \"$APP_HOME\"" $APP_HOME/wx-bot-weatherbot.yaml && \
     yq -i ".data.\"yamls-path\".value = \"$YAML_DATA\"" $APP_HOME/wx-bot-weatherbot.yaml && \
     yq -i ".data.\"data-path\".value = \"$APP_HOME/wx-bot-appdata\"" $APP_HOME/wx-bot-weatherbot.yaml
+
+ENV NEW_PROVIDER=wxWbitFunctions
+    #const activeProvider = wxWbitFunctions
+    #const activeProvider = wxWgovFunctions
+# Update the activeProvider line in the JavaScript file
+RUN sed -i "/^[[:space:]]*const activeProvider = /s/const activeProvider = .*/const activeProvider = $NEW_PROVIDER/" $APP_HOME/wxf-providers/wx-bot-provider-map.js
+
 
 # review the primary app yaml file for the changes we made above
 RUN cat $APP_HOME/wx-bot-weatherbot.yaml
